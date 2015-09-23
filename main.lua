@@ -14,6 +14,7 @@ function startGame()
 	person = display.newImageRect("persona.png", 525, 934)
 	person.x = leftX + screenW/2
 	person.y = bottomY - person.height/2
+	person:addEventListener("tap", tapAction)
 
 	local upper_line = display.newLine( leftX, screenH/1.5 + topY, rightX, screenH/1.5 + topY)
 	local lower_line = display.newLine( leftX, screenH/2 + topY, rightX, screenH/2 + topY)
@@ -41,7 +42,6 @@ function startGame()
 	hands[4].x = rightX + (10 * hands[1].width)
 	hands[4].y = screenH/1.75 + hands[1].height/4
 
-	--timer.performWithDelay( 20, moveHands, -1 )
 	Runtime:addEventListener( "enterFrame", moveHands )
 
 
@@ -63,5 +63,15 @@ function resetHands(hand_index)
 		hands[hand_index].x = hands[hand_index - 1].x  + (3 * hands[hand_index].width)
 	end
 end
+
+function tapAction(e)
+	for i=1, #hands do
+		print("click: " .. e.x)
+		print("hand: " .. hands[i].x)
+		if hands[i].x >= 360 and hands[i].x <= 440 then
+			print("hit!!!")
+		end
+	end
+end	
 
 startGame()
