@@ -2,6 +2,8 @@ display.setStatusBar( display.HiddenStatusBar )
 
 system.activate("multitouch")
 
+local movieclip = require ("movieclip")
+
 local topY = display.screenOriginY --Numerical value for the top of the screen
 local rightX = display.contentWidth - display.screenOriginX --Numerical value for the right of the screen
 local bottomY = display.contentHeight - display.screenOriginY --Numerical value for the bottom of the screen
@@ -35,8 +37,8 @@ function startGame()
 	heart.x = 400
 	heart.y = screenH/1.6
 
-	local upper_line = display.newLine( leftX, 700, rightX, 700)
-	local lower_line = display.newLine( leftX, 950, rightX, 950)
+	upper_line = display.newLine( leftX, 700, rightX, 700)
+	lower_line = display.newLine( leftX, 950, rightX, 950)
 
 	upper_line:setColor(0,255,0)
 	upper_line.strokeWidth = 8
@@ -70,8 +72,8 @@ function startGame()
 end
 
 function playMusic()
-	local backgroundMusic = audio.loadStream( "cancion.mp3" )
-	local backgroundMusicChannel = audio.play( backgroundMusic, { channel=1, loops=-1 } )
+	backgroundMusic = audio.loadStream( "cancion.mp3" )
+	backgroundMusicChannel = audio.play( backgroundMusic, { channel=1, loops=0, onComplete=endGame } )
 end
 
 function moveHands()
@@ -112,6 +114,64 @@ function tapAction(e)
 		mistakes = mistakes + 1
 		mistakes_text.text = mistakes
 	end
+end
+
+function resetGame()
+	person:removeEventListener("tap", tapAction)
+	Runtime:removeEventListener("enterFrame", moveHands)
+
+	audio.stop()
+	audio.dispose(backgroundMusic)
+	backgroundMusic = nil
+
+	background:removeSelf()
+	background = nil
+
+	myText:removeSelf()
+	myText = nil
+
+	hits_text:removeSelf()
+	hits_text = nil
+
+	myText2:removeSelf()
+	myText2 = nil
+
+	mistakes_text:removeSelf()
+	mistakes_text = nil
+
+	person:removeSelf()
+	person = nil
+
+	heart:removeSelf()
+	heart = nil
+
+	upper_line:removeSelf()
+	upper_line = nil
+
+	lower_line:removeSelf()
+	lower_line = nil
+
+	for i=1, #hands do
+		hands[i]:removeSelf()
+		hands[i] = nil
+	end
+
+	table.remove(hands)
+
+end
+
+function endGame()
+	resetGame()
+
+	end_screen = display.newImageRect("end_screen.png", screenW, screenH)
+	end_screen.x = screenW/2
+	end_screen.y = screenH/2
+
+	beating_heart = movieclip.newAnim({"corazon1.png","corazon2.png","corazon3.png",},600,600)
+	beating_heart.x = screenW/2
+	beating_heart.y = screenH/2
+	beating_heart:setSpeed(0.10)
+	beating_heart:play()
 end	
 
 media.playVideo( "video.m4v", true, startGame )
