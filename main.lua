@@ -34,6 +34,10 @@ function startGame()
 	person.y = bottomY - person.height/2
 	person:addEventListener("tap", tapAction)
 
+	blow_text = display.newText( "¡Sopla 2 veces en su boca!", 108, 1100, native.systemFont, 44  )
+	blow_text:setFillColor(255,0,0)
+	blow_text.alpha = 0
+
 	heart = display.newImageRect("corazon.png", 140, 140)
 	heart.x = 400
 	heart.y = screenH/1.6
@@ -75,11 +79,13 @@ function pauseGame()
 	audio.pause()
 	handsMoving = 0
 	timer.performWithDelay( 6000, resumeGame )
+	blow_text.alpha = 1
 end
 
 function resumeGame()
 	audio.resume()
 	handsMoving = 1
+	blow_text.alpha = 0
 end
 
 function playMusic()
