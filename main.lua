@@ -14,6 +14,7 @@ local screenH = bottomY - topY --Numerical value for the height of the screen
 local hits = 0
 local cycles = 0
 local mistakes = 0
+local handsMoving = 1
 
 
 function startGame()
@@ -68,7 +69,17 @@ function startGame()
 
 	Runtime:addEventListener( "enterFrame", moveHands )
 
+end
 
+function pauseGame()
+	audio.pause()
+	handsMoving = 0
+	timer.performWithDelay( 6000, resumeGame )
+end
+
+function resumeGame()
+	audio.resume()
+	handsMoving = 1
 end
 
 function playMusic()
@@ -77,10 +88,12 @@ function playMusic()
 end
 
 function moveHands()
-	for i=1, #hands do
-		hands[i].x = hands[i].x - 11.2
-		if hands[i].x - hands[i].width/2 < leftX - hands[i].width then
-			resetHands(i)
+	if(handsMoving == 1) then
+		for i=1, #hands do
+			hands[i].x = hands[i].x - 11.2
+			if hands[i].x - hands[i].width/2 < leftX - hands[i].width then
+				resetHands(i)
+			end
 		end
 	end
 end
@@ -94,25 +107,28 @@ function resetHands(hand_index)
 end
 
 function tapAction(e)
-	miss = false
-	for i=1, #hands do
-		--print("click: " .. e.x)
-		--print("hand: " .. hands[i].x)
-		if hands[i].x >= 300 and hands[i].x <= 500 then
-			hits = hits + 1
-			if hits == 30 then
-				cycles = cycles + 1
-				hits = 0
+	if(handsMoving == 1) then
+		miss = false
+		for i=1, #hands do
+			--print("click: " .. e.x)
+			--print("hand: " .. hands[i].x)
+			if hands[i].x >= 300 and hands[i].x <= 500 then
+				hits = hits + 1
+				if hits == 30 then
+					cycles = cycles + 1
+					hits = 0
+					pauseGame()
+				end
+				hits_text.text = hits .. " (" .. cycles .. ")"
+				system.vibrate()
+				miss = true
 			end
-			hits_text.text = hits .. " (" .. cycles .. ")"
-			system.vibrate()
-			miss = true
 		end
-	end
 
-	if miss == false then
-		mistakes = mistakes + 1
-		mistakes_text.text = mistakes
+		if miss == false then
+			mistakes = mistakes + 1
+			mistakes_text.text = mistakes
+		end
 	end
 end
 
