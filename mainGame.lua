@@ -18,10 +18,13 @@ local cycles = 0
 local mistakes = 0
 local handsMoving = 1
 
-
 function startGame()
-	timer.performWithDelay( 600, playMusic )
+	timer.performWithDelay( 400, playMusic )
+	Runtime:addEventListener( "enterFrame", moveHands )
 
+end
+
+function showElements()
 	background = display.newImageRect("fondo.png", screenW, screenH)
 	background.x = screenW/2 + leftX
 	background.y = screenH/2 + topY
@@ -72,9 +75,19 @@ function startGame()
 	hands[4].x = rightX + (7 * hands[1].width)
 	hands[4].y = screenH/1.6
 
+	pulse = display.newImageRect("pulso.png", 400, 300)
+	pulse.x = leftX - pulse.width
+	pulse.y = screenH/2
 
-	Runtime:addEventListener( "enterFrame", moveHands )
+	pulseRight()
+end
 
+function pulseRight()
+	transition.to( pulse, { time=3000, x = 200, onComplete=pulseLeft } )
+end
+
+function pulseLeft()
+	transition.to( pulse, { time=3000, delay=5000, x = leftX - pulse.width, onComplete=startGame } )
 end
 
 function pauseGame()
@@ -98,7 +111,7 @@ end
 function moveHands()
 	if(handsMoving == 1) then
 		for i=1, #hands do
-			hands[i].x = hands[i].x - 11.2
+			hands[i].x = hands[i].x - 11.3
 			if hands[i].x - hands[i].width/2 < leftX - hands[i].width then
 				resetHands(i)
 			end
@@ -200,7 +213,7 @@ end
 
 
 function scene:createScene( event )
-	media.playVideo( "video.m4v", true, startGame )
+	media.playVideo( "video.m4v", true, showElements )
 end
 
 function scene:enterScene(event)

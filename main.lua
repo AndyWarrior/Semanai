@@ -26,6 +26,9 @@ function startGame()
 	boton_manual:removeEventListener("tap", showManual)
 	boton_creditos:removeEventListener("tap", showCredits)
 
+	menu:removeSelf()
+	menu = nil
+
 	boton_inicio:removeSelf()
 	boton_inicio = nil
 
