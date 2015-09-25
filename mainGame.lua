@@ -131,6 +131,12 @@ function resetHands(hand_index)
 	else
 		hands[hand_index].x = hands[hand_index - 1].x  + (2 * hands[hand_index].width)
 	end
+	
+	if hands[hand_index].isVisible == true and handsMoving == 1 then
+		mistakes = mistakes + 1
+		mistakes_text.text = mistakes
+	end
+	hands[hand_index].isVisible = true
 end
 
 function tapAction(e)
@@ -147,6 +153,7 @@ function tapAction(e)
 					pauseGame()
 				end
 				hits_text.text = hits .. " (" .. cycles .. ")"
+				hands[i].isVisible = false
 				system.vibrate()
 				miss = true
 			end
