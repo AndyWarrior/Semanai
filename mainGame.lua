@@ -30,9 +30,9 @@ function showElements()
 	background.y = screenH/2 + topY
 
 	myText = display.newText( "Repeticiones", 50, 40, native.systemFont, 48  )
-	hits_text = display.newText( "0 (0)", 100, 90, native.systemFont, 48  )
+	hits_text = display.newText( "0 (0)", 140, 90, native.systemFont, 48  )
 	myText2 = display.newText( "Errores", 500, 40, native.systemFont, 48  )
-	mistakes_text = display.newText( "0", 550, 90, native.systemFont, 48  )
+	mistakes_text = display.newText( "0", 565, 90, native.systemFont, 48  )
 
 	person = display.newImageRect("persona.png", screenW, 1100)
 	person.x = leftX + screenW/2
@@ -91,14 +91,14 @@ function pulseLeft()
 end
 
 function pauseGame()
-	audio.pause()
+	--audio.pause()
 	handsMoving = 0
 	timer.performWithDelay( 6000, resumeGame )
 	blow_text.alpha = 1
 end
 
 function resumeGame()
-	audio.resume()
+	--audio.resume()
 	handsMoving = 1
 	blow_text.alpha = 0
 end
@@ -109,14 +109,20 @@ function playMusic()
 end
 
 function moveHands()
-	if(handsMoving == 1) then
+	--if(handsMoving == 1) then
 		for i=1, #hands do
 			hands[i].x = hands[i].x - 11.3
 			if hands[i].x - hands[i].width/2 < leftX - hands[i].width then
 				resetHands(i)
 			end
+
+			if(handsMoving == 1) then
+				hands[i].alpha = 1
+			else
+				hands[i].alpha = 0
+			end
 		end
-	end
+	--end
 end
 
 function resetHands(hand_index)
